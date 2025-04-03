@@ -1,0 +1,73 @@
+# Visual Studio Specific
+.vs/
+*.user
+*.suo
+*.vssscc
+*.cache
+*.ncb
+*.aps
+*.sdf
+*.VC.db
+*.opensdf
+*.VC.opendb
+
+# Build and Binary Files
+bin/
+obj/
+Debug/
+Release/
+*.dll
+*.exe
+*.pdb
+*.ilk
+*.idb
+*.lib
+*.exp
+
+# Package Management
+packages/
+*.nupkg
+project.lock.json
+project.assets.json
+.nuget/
+
+# Logs and User-Specific Files
+*.log
+*.tlog
+*.pyc
+*.pidb
+*.mode1v3
+*.mode2v3
+*.rsuser
+
+# Resharper and Rider
+*_Resharper.*
+*.DotSettings.user
+.idea/
+
+# ASP.NET Specific
+App_Data/
+AppPackages/
+TestResults/
+node_modules/
+bower_components/
+
+# Publishing Output
+*.Publish.xml
+publish/
+wwwroot/
+
+# Entity Framework
+*.edmx.diagram
+*.edmx.sql
+Migrations/
+
+# Configuration and Secrets
+secrets.json
+appsettings.Development.json
+appsettings.Local.json
+
+# IIS and Deployment
+*.vspscc
+*.vssscc
+*.deployment
