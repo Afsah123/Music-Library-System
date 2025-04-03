@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Music_Library_System.Models;
+using MusicLibrarySystem.Models;
 using System.Diagnostics;
 
-namespace Music_Library_System.Controllers
+namespace MusicLibrarySystem.Controllers
 {
     public class HomeController : Controller
     {
@@ -14,6 +15,11 @@ namespace Music_Library_System.Controllers
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult About()
         {
             return View();
         }
