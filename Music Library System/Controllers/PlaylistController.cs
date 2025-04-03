@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusicLibrarySystem.Models;
+using Music_Library_System.Models;
 using System.Collections.Generic;
 
-namespace MusicLibrarySystem.Controllers
+namespace Music_Library_System.Controllers
 {
     public class PlaylistController : Controller
     {

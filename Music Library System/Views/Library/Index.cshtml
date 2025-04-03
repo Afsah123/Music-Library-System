@@ -1,0 +1,79 @@
+﻿@{
+    ViewData["Title"] = "Your Library";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="bg-black rounded-3 p-4 mb-4">
+            <h1 class="display-4">Your Library</h1>
+            <p class="lead">Access all your saved music in one place</p>
+            <div class="d-flex mt-4">
+                <a asp-controller="Library" asp-action="Songs" class="btn btn-outline-light me-2">Songs</a>
+                <a asp-controller="Library" asp-action="Albums" class="btn btn-outline-light me-2">Albums</a>
+                <a asp-controller="Library" asp-action="Artists" class="btn btn-outline-light me-2">Artists</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="card bg-black text-light border-0 mb-4">
+            <div class="card-body text-center">
+                <i class="bi bi-music-note-beamed display-1 mb-3"></i>
+                <h3>Your Songs</h3>
+                <p>412 songs saved</p>
+                <a asp-controller="Library" asp-action="Songs" class="btn btn-danger">View All Songs</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-black text-light border-0 mb-4">
+            <div class="card-body text-center">
+                <i class="bi bi-disc display-1 mb-3"></i>
+                <h3>Your Albums</h3>
+                <p>57 albums saved</p>
+                <a asp-controller="Library" asp-action="Albums" class="btn btn-danger">View All Albums</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-black text-light border-0 mb-4">
+            <div class="card-body text-center">
+                <i class="bi bi-person-badge display-1 mb-3"></i>
+                <h3>Your Artists</h3>
+                <p>82 artists followed</p>
+                <a asp-controller="Library" asp-action="Artists" class="btn btn-danger">View All Artists</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-dark text-light mb-4 border-0">
+    <div class="card-header bg-black">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Recently Added</h3>
+            <a href="#" class="text-light">View All</a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="row g-4">
+            @for (int i = 1; i <= 6; i++)
+            {
+                <div class="col-md-2">
+                    <div class="card bg-black text-light border-0">
+                        <img src="https://picsum.photos/id/@(60 + i)/200/200" class="card-img-top rounded-3" alt="Album Cover">
+                        <div class="card-body p-2">
+                            <h6 class="card-title mb-0">Recent Item @i</h6>
+                            <p class="card-text small text-secondary mb-0">Added 2 days ago</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info bg-dark text-info border border-info">
+    <i class="bi bi-info-circle me-2"></i> This is the main Library page, serving as a hub for accessing all your saved music content. Navigate to specific sections using the buttons above.
+</div>

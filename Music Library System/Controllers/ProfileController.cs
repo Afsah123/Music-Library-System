@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using MusicLibrarySystem.Models;
+using Music_Library_System.Models;
 
-namespace MusicLibrarySystem.Controllers
+namespace Music_Library_System.Controllers
 {
     public class ProfileController : Controller
     {

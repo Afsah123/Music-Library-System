@@ -1,0 +1,50 @@
+﻿@model Music_Library_System.Models.UserProfile
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-md-4 text-center">
+            <img src="@Model.ProfileImageUrl" class="img-fluid rounded-circle mb-3" alt="@Model.UserName" style="width: 200px; height: 200px; object-fit: cover;">
+            <h2>@Model.UserName</h2>
+            <p class="text-muted">@Model.Email</p>
+            <button class="btn btn-outline-light">
+                <i class="bi bi-pencil me-1"></i> Edit Profile
+            </button>
+        </div>
+        <div class="col-md-8">
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body text-center">
+                            <h1 class="display-4">@Model.TotalPlaylists</h1>
+                            <p class="card-text">Playlists</p>
+                            <a href="@Url.Action("Index", "Playlist")" class="btn btn-outline-light">View All</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card bg-dark text-white h-100">
+                        <div class="card-body text-center">
+                            <h1 class="display-4">@Model.FavoriteSongs</h1>
+                            <p class="card-text">Favorite Songs</p>
+                            <button class="btn btn-outline-light">View All</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card bg-dark text-white">
+                <div class="card-header">Recent Activity</div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush bg-dark">
+                        <li class="list-group-item bg-dark text-white">Added "Back in Black" to "Rock Classics" playlist</li>
+                        <li class="list-group-item bg-dark text-white">Created new playlist "Chill Vibes"</li>
+                        <li class="list-group-item bg-dark text-white">Liked "Money" by Pink Floyd</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

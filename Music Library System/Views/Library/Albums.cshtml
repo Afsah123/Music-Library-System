@@ -1,0 +1,58 @@
+﻿@model List<Music_Library_System.Models.Album>
+@{
+    ViewData["Title"] = "Albums";
+}
+
+<div class="row mb-4">
+    <div class="col-md-12">
+        <div class="bg-black rounded-3 p-4 mb-4">
+            <h1 class="display-4">Your Albums</h1>
+            <p class="lead">Browse your saved albums</p>
+            <div class="d-flex mt-4">
+                <a asp-controller="Library" asp-action="Index" class="btn btn-outline-light me-2">Library Home</a>
+                <a asp-controller="Library" asp-action="Songs" class="btn btn-outline-light me-2">Songs</a>
+                <a asp-controller="Library" asp-action="Artists" class="btn btn-outline-light me-2">Artists</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card bg-dark text-light mb-4 border-0">
+    <div class="card-header bg-black">
+        <div class="d-flex justify-content-between align-items-center">
+            <h3>Albums (@Model.Count)</h3>
+            <div>
+                <button class="btn btn-outline-light me-2"><i class="bi bi-sort-alpha-down"></i> Sort</button>
+                <button class="btn btn-outline-light"><i class="bi bi-filter"></i> Filter</button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="row g-4">
+            @foreach (var album in Model)
+            {
+                <div class="col-md-3">
+                    <div class="card bg-black text-light border-0">
+                        <img src="@album.CoverImageUrl" class="card-img-top rounded-3" alt="@album.Title">
+                        <div class="card-body">
+                            <h5 class="card-title mb-1">@album.Title</h5>
+                            <p class="card-text text-secondary mb-2">@album.ArtistName</p>
+                            <p class="card-text small">
+                                <span class="text-secondary">@album.ReleaseYear</span> •
+                                <span class="text-secondary">@album.SongCount songs</span>
+                            </p>
+                            <div class="d-flex">
+                                <button class="btn btn-sm btn-danger me-2"><i class="bi bi-play-fill"></i> Play</button>
+                                <button class="btn btn-sm btn-outline-light"><i class="bi bi-three-dots"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-info bg-dark text-info border border-info">
+    <i class="bi bi-info-circle me-2"></i> This page displays all albums in your library. You can sort, filter, and play albums from this view.
+</div>
