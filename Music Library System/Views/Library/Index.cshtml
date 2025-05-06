@@ -1,75 +1,237 @@
 ﻿@{
-    ViewData["Title"] = "Your Library";
+    ViewData["Title"] = "Library";
 }
 
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="bg-black rounded-3 p-4 mb-4">
-            <h1 class="display-4">Your Library</h1>
-            <p class="lead">Access all your saved music in one place</p>
-            <div class="d-flex mt-4">
-                <a asp-controller="Library" asp-action="Songs" class="btn btn-outline-light me-2">Songs</a>
-                <a asp-controller="Library" asp-action="Albums" class="btn btn-outline-light me-2">Albums</a>
-                <a asp-controller="Library" asp-action="Artists" class="btn btn-outline-light me-2">Artists</a>
-            </div>
-        </div>
+<style>
+    .library-header {
+        background: linear-gradient(45deg, #000000, #1a1a1a);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .library-title {
+        color: #FF6B00;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .library-subtitle {
+        color: white;
+        font-size: 1.2rem;
+        opacity: 0.8;
+    }
+
+    .library-section {
+        padding: 2rem 0;
+        background: #000000;
+    }
+
+    .section-title {
+        color: #FF6B00;
+        font-size: 1.8rem;
+        margin-bottom: 1.5rem;
+        font-weight: bold;
+    }
+
+    .music-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(255, 107, 0, 0.2);
+        margin-bottom: 1.5rem;
+    }
+
+    .music-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 107, 0, 0.1);
+    }
+
+    .music-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .music-card h3 {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .music-card p {
+        color: #FF6B00;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+
+    .play-button {
+        background: #FF6B00;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        transition: background 0.3s ease;
+        width: 100%;
+    }
+
+    .play-button:hover {
+        background: #FF8533;
+        color: white;
+    }
+
+    .filter-section {
+        background: rgba(255, 107, 0, 0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-title {
+        color: #FF6B00;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-button {
+        background: transparent;
+        border: 1px solid #FF6B00;
+        color: #FF6B00;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-button:hover, .filter-button.active {
+        background: #FF6B00;
+        color: white;
+    }
+
+    .search-box {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 107, 0, 0.2);
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 20px;
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    .search-box:focus {
+        outline: none;
+        border-color: #FF6B00;
+        box-shadow: 0 0 0 2px rgba(255, 107, 0, 0.2);
+    }
+
+    .sort-dropdown {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 107, 0, 0.2);
+        color: white;
+        padding: 0.75rem 1rem;
+        border-radius: 20px;
+        width: 100%;
+    }
+
+    .sort-dropdown:focus {
+        outline: none;
+        border-color: #FF6B00;
+    }
+</style>
+
+<div class="library-header">
+    <div class="container">
+        <h1 class="library-title">Your Library</h1>
+        <p class="library-subtitle">All your favorite tracks in one place</p>
     </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 mb-4">
-            <div class="card-body text-center">
-                <i class="bi bi-music-note-beamed display-1 mb-3"></i>
-                <h3>Your Songs</h3>
-                <p>412 songs saved</p>
-                <a asp-controller="Library" asp-action="Songs" class="btn btn-danger">View All Songs</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 mb-4">
-            <div class="card-body text-center">
-                <i class="bi bi-disc display-1 mb-3"></i>
-                <h3>Your Albums</h3>
-                <p>57 albums saved</p>
-                <a asp-controller="Library" asp-action="Albums" class="btn btn-danger">View All Albums</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 mb-4">
-            <div class="card-body text-center">
-                <i class="bi bi-person-badge display-1 mb-3"></i>
-                <h3>Your Artists</h3>
-                <p>82 artists followed</p>
-                <a asp-controller="Library" asp-action="Artists" class="btn btn-danger">View All Artists</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card bg-dark text-light mb-4 border-0">
-    <div class="card-header bg-black">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>Recently Added</h3>
-            <a href="#" class="text-light">View All</a>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <div class="row g-4">
-            @for (int i = 1; i <= 6; i++)
-            {
-                <div class="col-md-2">
-                    <div class="card bg-black text-light border-0">
-                        <img src="https://picsum.photos/id/@(60 + i)/200/200" class="card-img-top rounded-3" alt="Album Cover">
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-0">Recent Item @i</h6>
-                            <p class="card-text small text-secondary mb-0">Added 2 days ago</p>
-                        </div>
-                    </div>
+<div class="library-section">
+    <div class="container">
+        <div class="filter-section">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <input type="text" class="search-box" placeholder="Search your library...">
                 </div>
-            }
+                <div class="col-md-6 mb-3">
+                    <select class="sort-dropdown">
+                        <option value="">Sort by</option>
+                        <option value="recent">Recently Added</option>
+                        <option value="name">Name</option>
+                        <option value="artist">Artist</option>
+                        <option value="plays">Most Played</option>
+                    </select>
+                </div>
+            </div>
+            <h3 class="filter-title">Filter by Genre</h3>
+            <div class="filter-buttons">
+                <button class="filter-button active">All</button>
+                <button class="filter-button">Electronic</button>
+                <button class="filter-button">Hip Hop</button>
+                <button class="filter-button">Rock</button>
+                <button class="filter-button">Pop</button>
+                <button class="filter-button">Jazz</button>
+                <button class="filter-button">Classical</button>
+            </div>
+        </div>
+
+        <h2 class="section-title">Your Tracks</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Summer Vibes</h3>
+                    <p>Electronic • 3:45</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Midnight Dreams</h3>
+                    <p>Ambient • 4:20</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Urban Beats</h3>
+                    <p>Hip Hop • 3:15</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="section-title mt-5">Recently Added</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Electric Dreams</h3>
+                    <p>Synthwave • 2:45</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Neon Nights</h3>
+                    <p>Retrowave • 3:30</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Digital Sunset</h3>
+                    <p>Chillwave • 4:15</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
         </div>
     </div>
 </div>

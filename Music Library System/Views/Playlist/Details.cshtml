@@ -2,73 +2,653 @@
 
 @{
     ViewData["Title"] = Model.Name;
-    var songs = ViewBag.Songs as List<Music_Library_System.Models.Song>;
 }
 
-<div class="container mt-4">
-    <div class="row mb-4">
-        <div class="col-md-4">
-            <img src="@Model.CoverImageUrl" class="img-fluid rounded" alt="@Model.Name">
-        </div>
-        <div class="col-md-8">
-            <h1 class="mb-2">@Model.Name</h1>
-            <p class="text-muted">@Model.Description</p>
-            <p>@Model.SongCount songs</p>
-            <div class="d-flex gap-2">
-                <button class="btn btn-success">
-                    <i class="bi bi-play-fill me-1"></i> Play All
-                </button>
-                <button class="btn btn-outline-light">
-                    <i class="bi bi-shuffle me-1"></i> Shuffle
-                </button>
-                <button class="btn btn-outline-light">
-                    <i class="bi bi-pencil me-1"></i> Edit
-                </button>
+<style>
+    .main-content {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    body {
+        background: #000;
+    }
+    .playlist-details-hero {
+        background: linear-gradient(120deg, #000 60%, #FF6B00 100%);
+        padding: 3rem 0 2rem 0;
+        border-radius: 0 0 32px 32px;
+        box-shadow: 0 8px 32px 0 rgba(255,107,0,0.10);
+        margin-bottom: 2.5rem;
+    }
+    .playlist-details-container {
+        max-width: 900px;
+        margin: -120px auto 0 auto;
+        position: relative;
+        z-index: 2;
+    }
+    .playlist-details-card {
+        background: rgba(30,30,30,0.95);
+        border-radius: 24px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        padding: 2.5rem 2rem 2rem 2rem;
+        color: #fff;
+        display: flex;
+        gap: 2.5rem;
+        align-items: center;
+        margin-bottom: 2.5rem;
+    }
+    .playlist-cover-img {
+        width: 220px;
+        height: 220px;
+        object-fit: cover;
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.15);
+        border: 4px solid #FF6B00;
+        background: #181818;
+    }
+    .playlist-info {
+        flex: 1;
+    }
+    .playlist-title {
+        color: #FF6B00;
+        font-size: 2.2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .playlist-desc {
+        color: #fff;
+        opacity: 0.9;
+        font-size: 1.1rem;
+        margin-bottom: 1.2rem;
+    }
+    .playlist-meta {
+        margin-bottom: 1.2rem;
+    }
+    .badge-orange {
+        background: #FF6B00;
+        color: #fff;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        padding: 0.3em 0.8em;
+        margin-right: 0.5em;
+    }
+    .badge-outline {
+        border: 1px solid #FF6B00;
+        color: #FF6B00;
+        background: transparent;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        padding: 0.3em 0.8em;
+    }
+    .playlist-actions .btn {
+        margin-right: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+    .btn-orange {
+        background: #FF6B00;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+    }
+    .btn-orange:hover, .btn-orange:focus {
+        background: #fff;
+        color: #FF6B00;
+    }
+    .btn-outline-orange {
+        border: 1.5px solid #FF6B00;
+        color: #FF6B00;
+        background: transparent;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+    }
+    .btn-outline-orange:hover, .btn-outline-orange:focus {
+        background: #FF6B00;
+        color: #fff;
+    }
+    .song-table {
+        background: rgba(30,30,30,0.95);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        color: #fff;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        width: 100%;
+        min-width: 1000px;
+    }
+    .song-table th {
+        background: #181818;
+        color: #FF6B00;
+        font-weight: bold;
+        border: none;
+        padding: 1rem;
+        white-space: nowrap;
+    }
+    .song-table td {
+        background: transparent;
+        color: #fff;
+        vertical-align: middle;
+        border-top: 1px solid #222;
+        padding: 1rem;
+    }
+    .song-table tr:hover td {
+        background: rgba(255,107,0,0.08);
+        color: #FF6B00;
+    }
+    .song-cover-img {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #FF6B00;
+        background: #181818;
+    }
+    .dropdown-menu-dark .dropdown-item.active, .dropdown-menu-dark .dropdown-item:active {
+        background-color: #FF6B00;
+        color: #fff;
+    }
+    /* Orange focus for modal inputs */
+    #editPlaylistModal .form-control:focus, #editPlaylistModal textarea:focus {
+        border-color: #FF6B00;
+        box-shadow: 0 0 0 2px rgba(255,107,0,0.15);
+        background: #181818;
+        color: #fff;
+    }
+    .playlist-card {
+        background: rgba(30,30,30,0.95);
+        border-radius: 16px;
+        padding: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+    }
+    .playlist-card:hover {
+        transform: translateY(-5px);
+        border-color: #FF6B00;
+        box-shadow: 0 4px 20px rgba(255,107,0,0.15);
+    }
+    .playlist-card.selected {
+        border-color: #FF6B00;
+        background: rgba(255,107,0,0.1);
+    }
+    .playlist-cover {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        border-radius: 12px;
+        margin-bottom: 1rem;
+        border: 2px solid #FF6B00;
+    }
+    .playlist-name {
+        color: #FF6B00;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .playlist-info {
+        color: #fff;
+        opacity: 0.8;
+        font-size: 0.9rem;
+    }
+    /* Make dropdown menu wider and scrollable */
+    .dropdown-menu {
+        min-width: 200px;
+        max-height: 300px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: #FF6B00 #181818;
+    }
+
+    /* Custom scrollbar for Webkit browsers (Chrome, Safari, etc.) */
+    .dropdown-menu::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-track {
+        background: #181818;
+        border-radius: 4px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb {
+        background: #FF6B00;
+        border-radius: 4px;
+    }
+
+    .dropdown-menu::-webkit-scrollbar-thumb:hover {
+        background: #ff8c42;
+    }
+
+    /* Ensure dropdown items are properly spaced */
+    .dropdown-item {
+        padding: 0.5rem 1rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Ensure table container is scrollable */
+    .table-responsive {
+        overflow-x: auto;
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+</style>
+
+<div class="main-content">
+    <div class="playlist-details-hero"></div>
+    <div class="playlist-details-container">
+        <div class="playlist-details-card">
+            <img src="@Model.CoverImageUrl" class="playlist-cover-img" alt="@Model.Name">
+            <div class="playlist-info">
+                <div class="playlist-title">@Model.Name</div>
+                <div class="playlist-meta">
+                    <span class="badge-orange">@Model.Songs?.Count Songs</span>
+                    @if (Model.IsPublic)
+                    {
+                        <span class="badge-outline">Public</span>
+                    }
+                    else
+                    {
+                        <span class="badge-outline">Private</span>
+                    }
+                </div>
+                <div class="playlist-desc">@Model.Description</div>
+                <div class="playlist-actions">
+                    <button class="btn btn-orange" id="playAllBtn"><i class="bi bi-play-fill me-1"></i> Play All</button>
+                    <button class="btn btn-outline-orange" id="shuffleBtn"><i class="bi bi-shuffle me-1"></i> Shuffle</button>
+                    <button class="btn btn-outline-orange" id="editBtn"><i class="bi bi-pencil me-1"></i> Edit</button>
+                </div>
             </div>
         </div>
-    </div>
 
-    <div class="table-responsive">
-        <table class="table table-dark table-hover">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Artist</th>
-                    <th scope="col">Album</th>
-                    <th scope="col">Duration</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < songs.Count; i++)
-                {
-                    var song = songs[i];
+        <div id="noSongsAlert" class="alert alert-warning text-center" style="display:none; background:#181818; color:#FF6B00; border:1.5px solid #FF6B00; border-radius:12px; font-weight:bold;">There are no songs in this playlist.</div>
+
+        <!-- Audio Player -->
+        <div id="audioPlayerContainer" style="display:none; margin-bottom: 1.5rem;">
+            <div style="background: #181818; border-radius: 16px; padding: 1rem 1.5rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 12px 0 rgba(255,107,0,0.10);">
+                <i class="bi bi-music-note-beamed" style="color:#FF6B00; font-size: 2rem;"></i>
+                <div id="audioPlayerSongTitle" style="color:#FF6B00; font-weight:bold;"></div>
+                <audio id="audioPlayer" controls style="flex:1; max-width: 350px; background: #181818;">
+                    <source id="audioSource" src="" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+            </div>
+        </div>
+
+        <div class="song-table table-responsive">
+            <table class="table mb-0">
+                <thead>
                     <tr>
-                        <th scope="row">@(i + 1)</th>
-                        <td>
-                            <img src="@song.CoverImageUrl" alt="@song.Title" class="img-fluid" style="width: 40px; height: 40px;">
-                        </td>
-                        <td>@song.Title</td>
-                        <td>@song.ArtistName</td>
-                        <td>@song.AlbumTitle</td>
-                        <td>@song.Duration</td>
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton@(song.Id)" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton@(song.Id)">
-                                    <li><a class="dropdown-item" href="#">Remove from Playlist</a></li>
-                                    <li><a class="dropdown-item" href="#">Like</a></li>
-                                    <li><a class="dropdown-item" href="#">View Artist</a></li>
-                                </ul>
-                            </div>
-                        </td>
+                        <th style="width: 60px;"></th>
+                        <th style="width: 25%;">Title</th>
+                        <th style="width: 20%;">Artist</th>
+                        <th style="width: 20%;">Album</th>
+                        <th style="width: 100px;">Duration</th>
+                        <th style="width: 15%;">Genre</th>
+                        <th style="width: 120px;">Actions</th>
                     </tr>
-                }
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach (var song in Model.Songs)
+                    {
+                        <tr>
+                            <td>
+                                <img src="@song.Album?.CoverImageUrl" class="song-cover-img" alt="@song.Title">
+                            </td>
+                            <td>@song.Title</td>
+                            <td>@song.Artist?.Name</td>
+                            <td>@song.Album?.Title</td>
+                            <td>@song.Duration</td>
+                            <td>@song.Genre</td>
+                            <td>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-orange btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                        Actions
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-dark">
+                                        <li><a class="dropdown-item play-song-btn" href="#" data-title="@song.Title" data-src="@song.AudioUrl"><i class="bi bi-play-fill"></i> Play</a></li>
+                                        <li><a class="dropdown-item add-to-playlist-btn" href="#" data-title="@song.Title"><i class="bi bi-plus"></i> Add to Playlist</a></li>
+                                        <li><a class="dropdown-item add-to-fav-btn" href="#"><i class="bi bi-heart"></i> Add to Favorites</a></li>
+                                        <li><hr class="dropdown-divider"></li>
+                                        <li><a class="dropdown-item text-danger remove-from-playlist-btn" href="#"><i class="bi bi-trash"></i> Remove from Playlist</a></li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
+
+<!-- Edit Playlist Modal -->
+<div class="modal fade" id="editPlaylistModal" tabindex="-1" aria-labelledby="editPlaylistModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background:#181818; color:#fff; border-radius:18px; border:2px solid #FF6B00;">
+      <div class="modal-header" style="border-bottom:1.5px solid #FF6B00;">
+        <h5 class="modal-title" id="editPlaylistModalLabel" style="color:#FF6B00;">Edit Playlist</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="editPlaylistForm">
+          <div class="mb-3">
+            <label for="editName" class="form-label" style="color:#FF6B00;">Playlist Name</label>
+            <input type="text" class="form-control" id="editName" required maxlength="100">
+          </div>
+          <div class="mb-3">
+            <label for="editDescription" class="form-label" style="color:#FF6B00;">Description</label>
+            <textarea class="form-control" id="editDescription" rows="3" maxlength="300"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="editCoverImageUrl" class="form-label" style="color:#FF6B00;">Cover Image URL</label>
+            <input type="url" class="form-control" id="editCoverImageUrl" placeholder="https://...">
+          </div>
+          <div class="mb-3 form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="editIsPublic">
+            <label class="form-check-label" for="editIsPublic">Public Playlist</label>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer" style="border-top:1.5px solid #FF6B00;">
+        <button type="button" class="btn btn-outline-orange" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-orange" id="saveEditBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add to Playlist Modal -->
+<div class="modal fade" id="addToPlaylistModal" tabindex="-1" aria-labelledby="addToPlaylistModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content" style="background:#181818; color:#fff; border-radius:18px; border:2px solid #FF6B00;">
+      <div class="modal-header" style="border-bottom:1.5px solid #FF6B00;">
+        <h5 class="modal-title" id="addToPlaylistModalLabel" style="color:#FF6B00;">
+          <i class="bi bi-plus-circle me-2"></i>Move to Playlist
+        </h5>
+        <div class="d-flex align-items-center">
+          <button type="button" class="btn btn-orange me-2" onclick="window.location.href='/Playlist/Create'">
+            <i class="bi bi-plus-lg me-1"></i>Create New
+          </button>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="mb-4">
+          <div id="addToPlaylistSongTitle" style="color:#FF6B00; font-weight:bold; font-size:1.2rem; margin-bottom:0.5rem;"></div>
+          <div class="text-white">Select a playlist to move this song to:</div>
+          <div class="text-warning mt-2">
+            <i class="bi bi-exclamation-triangle-fill me-1"></i>
+            This will remove the song from the current playlist
+          </div>
+        </div>
+        
+        <div class="row g-3" id="playlistGrid">
+          <!-- Playlist cards will be dynamically added here -->
+        </div>
+
+        <div class="text-center mt-4" id="noPlaylistsMessage" style="display:none;">
+          <i class="bi bi-music-note-list" style="font-size:2rem; color:#FF6B00;"></i>
+          <p class="mt-2 text-muted">You haven't created any playlists yet.</p>
+          <button class="btn btn-orange mt-2" onclick="window.location.href='/Playlist/Create'">
+            <i class="bi bi-plus-circle me-2"></i>Create New Playlist
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" aria-labelledby="deleteConfirmationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content" style="background:#181818; color:#fff; border-radius:18px; border:2px solid #FF6B00;">
+      <div class="modal-header" style="border-bottom:1.5px solid #FF6B00;">
+        <h5 class="modal-title" id="deleteConfirmationModalLabel" style="color:#FF6B00;">Confirm Delete</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="color:#fff;">Are you sure you want to remove this song from the playlist?</p>
+        <p id="deleteSongTitle" style="color:#FF6B00; font-weight:bold;"></p>
+      </div>
+      <div class="modal-footer" style="border-top:1.5px solid #FF6B00;">
+        <button type="button" class="btn btn-outline-orange" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast for Add to Favorites -->
+<div class="toast align-items-center text-bg-dark border-0" id="favToast" role="alert" aria-live="assertive" aria-atomic="true" style="position:fixed; bottom:2rem; right:2rem; z-index:9999; min-width:220px;">
+  <div class="d-flex">
+    <div class="toast-body" style="color:#FF6B00; font-weight:bold;">
+      <i class="bi bi-heart-fill me-2"></i>Added to Favorites!
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<!-- Toast for Add to Playlist Success -->
+<div class="toast align-items-center text-bg-dark border-0" id="addToPlaylistToast" role="alert" aria-live="assertive" aria-atomic="true" style="position:fixed; bottom:2rem; right:2rem; z-index:9999; min-width:220px;">
+  <div class="d-flex">
+    <div class="toast-body" style="color:#FF6B00; font-weight:bold;">
+      <i class="bi bi-check-circle-fill me-2"></i>Added to playlist successfully!
+    </div>
+    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+  </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const playButtons = document.querySelectorAll('.play-song-btn');
+        const audioPlayerContainer = document.getElementById('audioPlayerContainer');
+        const audioPlayer = document.getElementById('audioPlayer');
+        const audioSource = document.getElementById('audioSource');
+        const audioPlayerSongTitle = document.getElementById('audioPlayerSongTitle');
+        const playAllBtn = document.getElementById('playAllBtn');
+        const shuffleBtn = document.getElementById('shuffleBtn');
+        const noSongsAlert = document.getElementById('noSongsAlert');
+        const editBtn = document.getElementById('editBtn');
+        const editModal = new bootstrap.Modal(document.getElementById('editPlaylistModal'));
+        const editName = document.getElementById('editName');
+        const editDescription = document.getElementById('editDescription');
+        const editCoverImageUrl = document.getElementById('editCoverImageUrl');
+        const editIsPublic = document.getElementById('editIsPublic');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+        let addToPlaylistModal = new bootstrap.Modal(document.getElementById('addToPlaylistModal'));
+        let addToPlaylistSongTitle = document.getElementById('addToPlaylistSongTitle');
+        let addToPlaylistToast = new bootstrap.Toast(document.getElementById('addToPlaylistToast'));
+        let selectedPlaylist = null;
+
+        playButtons.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const src = this.getAttribute('data-src');
+                const title = this.getAttribute('data-title');
+                if (src) {
+                    audioSource.src = src;
+                    audioPlayer.load();
+                    audioPlayer.play();
+                    audioPlayerSongTitle.textContent = title;
+                    audioPlayerContainer.style.display = 'block';
+                    noSongsAlert.style.display = 'none';
+                }
+            });
+        });
+
+        if (playAllBtn) {
+            playAllBtn.addEventListener('click', function() {
+                const firstBtn = document.querySelector('.play-song-btn');
+                if (firstBtn) {
+                    firstBtn.click();
+                } else {
+                    audioPlayerContainer.style.display = 'none';
+                    audioPlayer.pause();
+                    noSongsAlert.style.display = 'block';
+                }
+            });
+        }
+
+        if (shuffleBtn) {
+            shuffleBtn.addEventListener('click', function() {
+                const btns = Array.from(document.querySelectorAll('.play-song-btn'));
+                if (btns.length > 0) {
+                    const randomBtn = btns[Math.floor(Math.random() * btns.length)];
+                    randomBtn.click();
+                } else {
+                    audioPlayerContainer.style.display = 'none';
+                    audioPlayer.pause();
+                    noSongsAlert.style.display = 'block';
+                }
+            });
+        }
+
+        // Pre-fill modal with current values
+        if (editBtn) {
+            editBtn.addEventListener('click', function() {
+                editName.value = document.querySelector('.playlist-title').textContent.trim();
+                editDescription.value = document.querySelector('.playlist-desc').textContent.trim();
+                editCoverImageUrl.value = document.querySelector('.playlist-cover-img').src;
+                editIsPublic.checked = document.querySelector('.badge-outline').textContent.trim() === 'Public';
+                editModal.show();
+            });
+        }
+
+        // Save changes (simulate in JS)
+        if (saveEditBtn) {
+            saveEditBtn.addEventListener('click', function() {
+                document.querySelector('.playlist-title').textContent = editName.value;
+                document.querySelector('.playlist-desc').textContent = editDescription.value;
+                document.querySelector('.playlist-cover-img').src = editCoverImageUrl.value;
+                document.querySelector('.badge-outline').textContent = editIsPublic.checked ? 'Public' : 'Private';
+                editModal.hide();
+            });
+        }
+
+        // Sample playlists data (replace with your actual data)
+        const playlists = [
+            { id: 1, name: 'Rock Classics', coverImage: 'https://picsum.photos/200/200?random=1', songCount: 12 },
+            { id: 2, name: 'Chill Vibes', coverImage: 'https://picsum.photos/200/200?random=2', songCount: 8 }
+        ];
+
+        function renderPlaylists() {
+            const playlistGrid = document.getElementById('playlistGrid');
+            const noPlaylistsMessage = document.getElementById('noPlaylistsMessage');
+            
+            if (playlists.length === 0) {
+                playlistGrid.style.display = 'none';
+                noPlaylistsMessage.style.display = 'block';
+                return;
+            }
+
+            playlistGrid.style.display = 'flex';
+            noPlaylistsMessage.style.display = 'none';
+            playlistGrid.innerHTML = '';
+
+            playlists.forEach(playlist => {
+                const col = document.createElement('div');
+                col.className = 'col-md-6 col-lg-4';
+                col.innerHTML = `
+                    <div class="playlist-card" data-playlist-id="${playlist.id}">
+                        <img src="${playlist.coverImage}" class="playlist-cover" alt="${playlist.name}">
+                        <div class="playlist-name">${playlist.name}</div>
+                        <div class="playlist-info">
+                            <i class="bi bi-music-note-list me-1"></i>${playlist.songCount} songs
+                        </div>
+                    </div>
+                `;
+                playlistGrid.appendChild(col);
+            });
+
+            // Add click handlers to playlist cards
+            document.querySelectorAll('.playlist-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    // Remove selected class from all cards
+                    document.querySelectorAll('.playlist-card').forEach(c => c.classList.remove('selected'));
+                    // Add selected class to clicked card
+                    this.classList.add('selected');
+                    selectedPlaylist = this.dataset.playlistId;
+                });
+            });
+        }
+
+        document.querySelectorAll('.add-to-playlist-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const songTitle = this.getAttribute('data-title');
+                const songRow = this.closest('tr');
+                addToPlaylistSongTitle.textContent = `Move "${songTitle}" to:`;
+                selectedPlaylist = null;
+                renderPlaylists();
+                addToPlaylistModal.show();
+            });
+        });
+
+        // Handle moving to playlist
+        document.getElementById('addToPlaylistModal').addEventListener('click', function(e) {
+            if (e.target.closest('.playlist-card')) {
+                const playlistId = e.target.closest('.playlist-card').dataset.playlistId;
+                const songRow = document.querySelector('.add-to-playlist-btn').closest('tr');
+                
+                // Here you would typically make an API call to:
+                // 1. Add the song to the new playlist
+                // 2. Remove the song from the current playlist
+                
+                // For now, we'll just remove the row from the current view
+                if (songRow) {
+                    songRow.remove();
+                }
+                
+                addToPlaylistToast.show();
+                addToPlaylistModal.hide();
+            }
+        });
+
+        // Add to Favorites
+        let favToast = new bootstrap.Toast(document.getElementById('favToast'));
+        document.querySelectorAll('.add-to-fav-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                let heart = this.querySelector('i');
+                if (heart.classList.contains('bi-heart')) {
+                    heart.classList.remove('bi-heart');
+                    heart.classList.add('bi-heart-fill');
+                    heart.style.color = '#FF6B00';
+                    favToast.show();
+                } else {
+                    heart.classList.remove('bi-heart-fill');
+                    heart.classList.add('bi-heart');
+                    heart.style.color = '';
+                }
+            });
+        });
+
+        // Delete Confirmation
+        let deleteConfirmationModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+        let songToDelete = null;
+
+        document.querySelectorAll('.remove-from-playlist-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const row = this.closest('tr');
+                const songTitle = row.querySelector('td:nth-child(2)').textContent;
+                document.getElementById('deleteSongTitle').textContent = songTitle;
+                songToDelete = row;
+                deleteConfirmationModal.show();
+            });
+        });
+
+        document.getElementById('confirmDeleteBtn').addEventListener('click', function() {
+            if (songToDelete) {
+                songToDelete.remove();
+                deleteConfirmationModal.hide();
+                songToDelete = null;
+            }
+        });
+    });
+</script>

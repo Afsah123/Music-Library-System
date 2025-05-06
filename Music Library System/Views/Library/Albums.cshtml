@@ -36,10 +36,10 @@
                         <img src="@album.CoverImageUrl" class="card-img-top rounded-3" alt="@album.Title">
                         <div class="card-body">
                             <h5 class="card-title mb-1">@album.Title</h5>
-                            <p class="card-text text-secondary mb-2">@album.ArtistName</p>
+                            <p class="card-text text-secondary mb-2">@album.Artist?.Name</p>
                             <p class="card-text small">
-                                <span class="text-secondary">@album.ReleaseYear</span> •
-                                <span class="text-secondary">@album.SongCount songs</span>
+                                <span class="text-secondary">@album.ReleaseDate.Year</span> •
+                                <span class="text-secondary">@album.Songs?.Count songs</span>
                             </p>
                             <div class="d-flex">
                                 <button class="btn btn-sm btn-danger me-2"><i class="bi bi-play-fill"></i> Play</button>

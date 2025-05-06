@@ -1,0 +1,26 @@
+@model List<Music_Library_System.Models.Song>
+@foreach (var song in Model)
+{
+    <tr>
+        <td>
+            <img src="@song.Album?.CoverImageUrl" class="song-cover-img" alt="@song.Title">
+        </td>
+        <td>@song.Title</td>
+        <td>@song.Artist?.Name</td>
+        <td>@song.Album?.Title</td>
+        <td>@song.Duration</td>
+        <td>@song.Genre</td>
+        <td>
+            <div class="dropdown">
+                <button class="btn btn-outline-orange btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                    Actions
+                </button>
+                <ul class="dropdown-menu dropdown-menu-dark">
+                    <li><a class="dropdown-item play-song-btn" href="#" data-title="@song.Title" data-src="@song.AudioUrl"><i class="bi bi-play-fill"></i> Play</a></li>
+                    <li><a class="dropdown-item add-to-playlist-btn" href="#" data-title="@song.Title"><i class="bi bi-plus"></i> Add to Playlist</a></li>
+                    <li><a class="dropdown-item add-to-fav-btn" href="#"><i class="bi bi-heart"></i> Add to Favorites</a></li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+} 

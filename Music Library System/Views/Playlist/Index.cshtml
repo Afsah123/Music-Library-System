@@ -4,32 +4,163 @@
     ViewData["Title"] = "My Playlists";
 }
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-4">
-        <h1>My Playlists</h1>
-        <button class="btn btn-primary">
-            <i class="bi bi-plus-circle me-1"></i> Create Playlist
-        </button>
+<style>
+    .main-content {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .playlist-header {
+        padding: 2.5rem 0 1.5rem 0;
+        background: #000;
+    }
+    .playlist-title {
+        color: #FF6B00;
+        font-size: 2.3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .create-playlist-btn {
+        background: #FF6B00;
+        color: #fff;
+        border: none;
+        border-radius: 24px;
+        padding: 0.7rem 2rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+    }
+    .create-playlist-btn:hover {
+        background: #fff;
+        color: #FF6B00;
+    }
+    .playlist-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 2rem;
+    }
+    .playlist-card {
+        background: rgba(255,255,255,0.04);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        overflow: hidden;
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+        display: flex;
+        flex-direction: column;
+        min-height: 370px;
+        border: 1.5px solid rgba(255,107,0,0.18);
+    }
+    .playlist-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 8px 32px 0 rgba(255,107,0,0.18);
+        background: rgba(255,107,0,0.08);
+        border-color: #FF6B00;
+    }
+    .playlist-card-img {
+        width: 100%;
+        height: 180px;
+        object-fit: cover;
+        border-radius: 18px 18px 0 0;
+        filter: brightness(0.95);
+        border-bottom: 2px solid #FF6B00;
+    }
+    .playlist-card-content {
+        flex: 1;
+        padding: 1.2rem 1.2rem 1.5rem 1.2rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+    .playlist-card-title {
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        letter-spacing: 0.5px;
+    }
+    .playlist-card-meta {
+        color: #FF6B00;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+    }
+    .playlist-card-desc {
+        color: #fff;
+        font-size: 1rem;
+        opacity: 0.85;
+        margin-bottom: 1.2rem;
+    }
+    .badge-orange {
+        background: #FF6B00;
+        color: #fff;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        padding: 0.3em 0.8em;
+        margin-right: 0.5em;
+    }
+    .badge-outline {
+        border: 1px solid #FF6B00;
+        color: #FF6B00;
+        background: transparent;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        padding: 0.3em 0.8em;
+    }
+    .view-button {
+        background: #FF6B00;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        transition: background 0.3s, color 0.3s;
+        font-weight: bold;
+        width: 100%;
+    }
+    .view-button:hover {
+        background: #fff;
+        color: #FF6B00;
+    }
+    .container.playlist-container {
+        margin: 20px 0 0 0;
+    }
+</style>
+
+<div class="main-content">
+    <div class="playlist-header">
+        <div class="container d-flex justify-content-between align-items-center mb-4">
+            <h1 class="playlist-title">My Playlists</h1>
+            <a href="@Url.Action("Create", "Playlist")" class="create-playlist-btn">
+                <i class="bi bi-plus-lg me-1"></i> Create New Playlist
+            </a>
+        </div>
     </div>
 
-    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-        @foreach (var playlist in Model)
-        {
-            <div class="col">
-                <div class="card h-100 bg-dark text-white">
-                    <img src="@playlist.CoverImageUrl" class="card-img-top" alt="@playlist.Name">
-                    <div class="card-body">
-                        <h5 class="card-title">@playlist.Name</h5>
-                        <p class="card-text">@playlist.Description</p>
-                        <p class="card-text">
-                            <small class="text-muted">@playlist.SongCount songs</small>
-                        </p>
-                    </div>
-                    <div class="card-footer">
-                        <a href="@Url.Action("Details", "Playlist", new { id = playlist.Id })" class="btn btn-outline-light btn-sm">View Playlist</a>
+    <div class="container playlist-container" style="flex:1 0 auto;">
+        <div class="playlist-grid">
+            @foreach (var playlist in Model)
+            {
+                <div class="playlist-card">
+                    <img class="playlist-card-img" src="@playlist.CoverImageUrl" alt="@playlist.Name">
+                    <div class="playlist-card-content">
+                        <div>
+                            <div class="playlist-card-title">@playlist.Name</div>
+                            <div class="playlist-card-meta">
+                                <span class="badge-orange">@playlist.Songs?.Count Songs</span>
+                                @if (playlist.IsPublic)
+                                {
+                                    <span class="badge-outline">Public</span>
+                                }
+                                else
+                                {
+                                    <span class="badge-outline">Private</span>
+                                }
+                            </div>
+                            <div class="playlist-card-desc">@playlist.Description</div>
+                        </div>
+                        <a href="@Url.Action("Details", "Playlist", new { id = playlist.Id })" class="view-button"><i class="bi bi-music-note-list"></i> View Details</a>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>

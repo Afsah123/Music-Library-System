@@ -1,104 +1,347 @@
 ﻿@{
     ViewData["Title"] = "Home";
+    var session = Context.Session.GetString("UserSession");
+    var isLoggedIn = session != null;
 }
 
-<div class="row mb-4">
-    <div class="col-md-12">
-        <div class="bg-black rounded-3 p-4 mb-4 position-relative">
-            <div class="d-flex align-items-center">
-                <img src="https://picsum.photos/id/30/300/300" class="rounded-3 me-4" style="height: 220px;" alt="Featured Album" />
-                <div>
-                    <span class="badge bg-danger mb-2">FEATURED ALBUM</span>
-                    <h1 class="display-4">After Hours</h1>
-                    <h3 class="text-secondary">The Weeknd</h3>
-                    <p class="lead text-light-50">Released March 20, 2020 • 14 songs • 56 min</p>
-                    <div class="mt-3">
-                        <button class="btn btn-danger me-2"><i class="bi bi-play-fill"></i> Play</button>
-                        <button class="btn btn-outline-light me-2"><i class="bi bi-plus"></i> Add to Library</button>
-                        <button class="btn btn-outline-light"><i class="bi bi-three-dots"></i></button>
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                    url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+        background-size: cover;
+        background-position: center;
+        height: 500px;
+        display: flex;
+        align-items: center;
+        position: relative;
+    }
+
+    .hero-content {
+        color: white;
+        text-align: center;
+        padding: 2rem;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .hero-subtitle {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+        color: #FF6B00;
+    }
+
+    .featured-section {
+        padding: 4rem 0;
+        background: #000000;
+    }
+
+    .section-title {
+        color: #FF6B00;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        font-weight: bold;
+    }
+
+    .music-card {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        padding: 1rem;
+        transition: transform 0.3s ease;
+        border: 1px solid rgba(255, 107, 0, 0.2);
+    }
+
+    .music-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 107, 0, 0.1);
+    }
+
+    .music-card img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .music-card h3 {
+        color: white;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .music-card p {
+        color: #FF6B00;
+        font-size: 0.9rem;
+    }
+
+    .play-button {
+        background: #FF6B00;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        transition: background 0.3s ease;
+    }
+
+    .play-button:hover {
+        background: #FF8533;
+        color: white;
+    }
+
+    .category-pill {
+        background: rgba(255, 107, 0, 0.1);
+        color: #FF6B00;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin: 0.5rem;
+        display: inline-block;
+        transition: background 0.3s ease;
+    }
+
+    .category-pill:hover {
+        background: rgba(255, 107, 0, 0.2);
+        color: #FF6B00;
+        text-decoration: none;
+    }
+
+    .trending-section {
+        background: linear-gradient(45deg, #000000, #1a1a1a);
+        padding: 4rem 0;
+    }
+
+    .trending-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+        margin-bottom: 1rem;
+        transition: background 0.3s ease;
+    }
+
+    .trending-item:hover {
+        background: rgba(255, 107, 0, 0.1);
+    }
+
+    .trending-item img {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+        margin-right: 1rem;
+    }
+
+    .trending-info {
+        flex-grow: 1;
+    }
+
+    .trending-info h4 {
+        color: white;
+        margin: 0;
+    }
+
+    .trending-info p {
+        color: #FF6B00;
+        margin: 0;
+        font-size: 0.9rem;
+    }
+
+    .welcome-message {
+        color: #FF6B00;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .user-stats {
+        background: rgba(255, 107, 0, 0.1);
+        border-radius: 10px;
+        padding: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .user-stats-item {
+        text-align: center;
+        padding: 1rem;
+    }
+
+    .user-stats-number {
+        color: #FF6B00;
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .user-stats-label {
+        color: white;
+        font-size: 0.9rem;
+    }
+</style>
+
+@if (!isLoggedIn)
+{
+    <div class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome to SoundCloud</h1>
+                <p class="hero-subtitle">Discover, Stream, and Share Your Music</p>
+                <div class="mt-4">
+                    <a href="/Account/Login" class="btn btn-primary btn-lg me-3" style="background: #FF6B00; border: none;">Sign In</a>
+                    <a href="/Account/Register" class="btn btn-outline-light btn-lg">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">Welcome Back!</h1>
+                <p class="welcome-message">Continue your musical journey</p>
+                <div class="user-stats">
+                    <div class="row">
+                        <div class="col-md-4 user-stats-item">
+                            <div class="user-stats-number">0</div>
+                            <div class="user-stats-label">Tracks</div>
+                        </div>
+                        <div class="col-md-4 user-stats-item">
+                            <div class="user-stats-number">0</div>
+                            <div class="user-stats-label">Playlists</div>
+                        </div>
+                        <div class="col-md-4 user-stats-item">
+                            <div class="user-stats-number">0</div>
+                            <div class="user-stats-label">Following</div>
+                        </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Featured Tracks</h2>
+        <div class="row">
+            <div class="col-md-4 mb-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Summer Vibes</h3>
+                    <p>Electronic • 3:45</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Midnight Dreams</h3>
+                    <p>Ambient • 4:20</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
+                </div>
+            </div>
+            <div class="col-md-4 mb-4">
+                <div class="music-card">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=500&h=300&fit=crop" alt="Music Track">
+                    <h3>Urban Beats</h3>
+                    <p>Hip Hop • 3:15</p>
+                    <button class="play-button"><i class="bi bi-play-fill"></i> Play</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card bg-dark text-light mb-4 border-0">
-    <div class="card-header bg-black">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>Recently Played</h3>
-            <a href="#" class="text-light">View All</a>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <div class="row g-4">
-            @for (int i = 1; i <= 6; i++)
-            {
-                <div class="col-md-2">
-                    <div class="card bg-black text-light border-0">
-                        <img src="https://picsum.photos/id/@(30 + i)/200/200" class="card-img-top rounded-3" alt="Album Cover">
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-0">Song Title @i</h6>
-                            <p class="card-text small text-secondary mb-0">Artist Name</p>
+@if (isLoggedIn)
+{
+    <div class="featured-section">
+        <div class="container">
+            <h2 class="section-title">Recently Played</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="trending-item">
+                        <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop" alt="Recent Track">
+                        <div class="trending-info">
+                            <h4>Last Played Track</h4>
+                            <p>Synthwave • 2.5M plays</p>
                         </div>
+                        <button class="play-button"><i class="bi bi-play-fill"></i></button>
                     </div>
                 </div>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="card bg-dark text-light mb-4 border-0">
-    <div class="card-header bg-black">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>Made For You</h3>
-            <a href="#" class="text-light">View All</a>
-        </div>
-    </div>
-    <div class="card-body p-0">
-        <div class="row g-4">
-            @for (int i = 1; i <= 6; i++)
-            {
-                <div class="col-md-2">
-                    <div class="card bg-black text-light border-0">
-                        <img src="https://picsum.photos/id/@(40 + i)/200/200" class="card-img-top rounded-3" alt="Playlist Cover">
-                        <div class="card-body p-2">
-                            <h6 class="card-title mb-0">Daily Mix @i</h6>
-                            <p class="card-text small text-secondary mb-0">Based on your listening</p>
+                <div class="col-md-6">
+                    <div class="trending-item">
+                        <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=100&h=100&fit=crop" alt="Recent Track">
+                        <div class="trending-info">
+                            <h4>Your Favorite</h4>
+                            <p>Retrowave • 1.8M plays</p>
                         </div>
+                        <button class="play-button"><i class="bi bi-play-fill"></i></button>
                     </div>
                 </div>
-            }
+            </div>
+        </div>
+    </div>
+}
+
+<div class="trending-section">
+    <div class="container">
+        <h2 class="section-title">Trending Now</h2>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="trending-item">
+                    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=100&h=100&fit=crop" alt="Trending Track">
+                    <div class="trending-info">
+                        <h4>Electric Dreams</h4>
+                        <p>Synthwave • 2.5M plays</p>
+                    </div>
+                    <button class="play-button"><i class="bi bi-play-fill"></i></button>
+                </div>
+                <div class="trending-item">
+                    <img src="https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=100&h=100&fit=crop" alt="Trending Track">
+                    <div class="trending-info">
+                        <h4>Neon Nights</h4>
+                        <p>Retrowave • 1.8M plays</p>
+                    </div>
+                    <button class="play-button"><i class="bi bi-play-fill"></i></button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="trending-item">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=100&h=100&fit=crop" alt="Trending Track">
+                    <div class="trending-info">
+                        <h4>Digital Sunset</h4>
+                        <p>Chillwave • 2.1M plays</p>
+                    </div>
+                    <button class="play-button"><i class="bi bi-play-fill"></i></button>
+                </div>
+                <div class="trending-item">
+                    <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=100&h=100&fit=crop" alt="Trending Track">
+                    <div class="trending-info">
+                        <h4>Cosmic Waves</h4>
+                        <p>Space Ambient • 1.5M plays</p>
+                    </div>
+                    <button class="play-button"><i class="bi bi-play-fill"></i></button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="card bg-dark text-light mb-4 border-0">
-    <div class="card-header bg-black">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>Top Charts</h3>
-            <a href="#" class="text-light">View All</a>
+<div class="featured-section">
+    <div class="container">
+        <h2 class="section-title">Browse by Category</h2>
+        <div class="text-center">
+            <a href="/Library/Songs?genre=Electronic" class="category-pill">Electronic</a>
+            <a href="/Library/Songs?genre=Hip%20Hop" class="category-pill">Hip Hop</a>
+            <a href="/Library/Songs?genre=Rock" class="category-pill">Rock</a>
+            <a href="/Library/Songs?genre=Pop" class="category-pill">Pop</a>
+            <a href="/Library/Songs?genre=Jazz" class="category-pill">Jazz</a>
+            <a href="/Library/Songs?genre=Classical" class="category-pill">Classical</a>
+            <a href="/Library/Songs?genre=Ambient" class="category-pill">Ambient</a>
+            <a href="/Library/Songs?genre=R%26B" class="category-pill">R&B</a>
         </div>
     </div>
-    <div class="card-body p-0">
-        <div class="list-group list-group-flush bg-dark rounded-3">
-            @for (int i = 1; i <= 5; i++)
-            {
-                <div class="list-group-item bg-black text-light border-secondary d-flex align-items-center">
-                    <span class="me-3 fs-5">@i</span>
-                    <img src="https://picsum.photos/id/@(50 + i)/60/60" class="rounded me-3" alt="Song Cover">
-                    <div class="me-auto">
-                        <h6 class="mb-0">Popular Song @i</h6>
-                        <p class="mb-0 text-secondary">Popular Artist @i</p>
-                    </div>
-                    <span class="text-secondary me-3">3:45</span>
-                    <button class="btn btn-outline-light btn-sm rounded-circle"><i class="bi bi-three-dots"></i></button>
-                </div>
-            }
-        </div>
-    </div>
-</div>
-
-<div class="alert alert-info bg-dark text-info border border-info mb-4">
-    <i class="bi bi-info-circle me-2"></i> This is the home page of the Music Library System. It displays featured content, recently played songs, personalized recommendations, and trending music.
 </div>

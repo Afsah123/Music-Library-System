@@ -4,9 +4,18 @@
     {
         public int Id { get; set; }
         public string Title { get; set; }
-        public string ArtistName { get; set; }
+        public string Description { get; set; }
         public string CoverImageUrl { get; set; }
-        public int ReleaseYear { get; set; }
-        public int SongCount { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string Genre { get; set; }
+        
+        // Navigation properties
+        public int ArtistId { get; set; }
+        public Artist Artist { get; set; }
+        public ICollection<Song> Songs { get; set; }
+        
+        // Additional properties
+        public DateTime CreatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
     }
 }

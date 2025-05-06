@@ -2,48 +2,119 @@
     ViewData["Title"] = "About";
 }
 
-<div class="card bg-black text-light border-0 mb-4">
-    <div class="card-body">
-        <h1 class="display-4">About Music Library</h1>
-        <p class="lead">A modern music streaming platform created by Afsah Ur Rehman Zaidi.</p>
-        <hr class="my-4 bg-secondary" />
-        <p>
-            This music library system is designed to provide a seamless music listening experience.
-            Browse through millions of songs, create custom playlists, and discover new music tailored to your taste.
-        </p>
-        <p>
-            This project was developed as part of the SDF1 midterm exam requirements using ASP.NET Core MVC and Bootstrap.
-        </p>
+<style>
+    .about-hero {
+        background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1500&q=80') center center/cover no-repeat;
+        padding: 4rem 0 2rem 0;
+        text-align: center;
+        color: #fff;
+        border-radius: 0 0 32px 32px;
+        margin-bottom: 2.5rem;
+        box-shadow: 0 8px 32px 0 rgba(255,107,0,0.10);
+    }
+    .about-title {
+        color: #FF6B00;
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+        letter-spacing: 2px;
+        text-shadow: 0 2px 16px #000;
+    }
+    .about-lead {
+        font-size: 1.3rem;
+        color: #fff;
+        opacity: 0.9;
+        margin-bottom: 1.5rem;
+    }
+    .about-divider {
+        border-top: 2px solid #FF6B00;
+        width: 80px;
+        margin: 1.5rem auto 2rem auto;
+    }
+    .about-features {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        justify-content: center;
+        margin-bottom: 2.5rem;
+    }
+    .about-feature-card {
+        background: rgba(30,30,30,0.85);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        padding: 2rem 1.5rem 1.5rem 1.5rem;
+        color: #fff;
+        min-width: 260px;
+        max-width: 340px;
+        flex: 1 1 260px;
+        text-align: center;
+        border: 1.5px solid rgba(255,107,0,0.18);
+        transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+    .about-feature-card:hover {
+        transform: translateY(-8px) scale(1.03);
+        box-shadow: 0 8px 32px 0 rgba(255,107,0,0.18);
+        background: rgba(255,107,0,0.08);
+        border-color: #FF6B00;
+    }
+    .about-feature-icon {
+        font-size: 2.5rem;
+        color: #FF6B00;
+        margin-bottom: 1rem;
+    }
+    .about-feature-title {
+        color: #FF6B00;
+        font-size: 1.3rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+    .about-feature-desc {
+        color: #fff;
+        opacity: 0.9;
+        font-size: 1.05rem;
+    }
+    .about-info {
+        background: rgba(30,30,30,0.95);
+        color: #FF6B00;
+        border: 1.5px solid #FF6B00;
+        border-radius: 12px;
+        padding: 1.2rem 1rem;
+        text-align: center;
+        font-size: 1.1rem;
+        margin-bottom: 2rem;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+
+<div class="about-hero">
+    <div class="about-title">About Music Library</div>
+    <div class="about-lead">A modern music streaming platform created by <b>Afsah Ur Rehman Zaidi</b>.</div>
+    <div class="about-divider"></div>
+    <div style="max-width: 700px; margin: 0 auto;">
+        <p style="font-size:1.1rem; color:#fff; opacity:0.92;">This music library system is designed to provide a seamless music listening experience. Browse through millions of songs, create custom playlists, and discover new music tailored to your taste. Developed as part of the SDF1 midterm exam using ASP.NET Core MVC and Bootstrap.</p>
     </div>
 </div>
 
-<div class="row mb-4">
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 h-100">
-            <div class="card-body">
-                <h2><i class="bi bi-music-note-list me-2"></i> Discover</h2>
-                <p>Find your next favorite song from millions of tracks across all genres and eras.</p>
-            </div>
-        </div>
+<div class="about-features">
+    <div class="about-feature-card">
+        <div class="about-feature-icon"><i class="bi bi-music-note-list"></i></div>
+        <div class="about-feature-title">Discover</div>
+        <div class="about-feature-desc">Find your next favorite song from millions of tracks across all genres and eras.</div>
     </div>
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 h-100">
-            <div class="card-body">
-                <h2><i class="bi bi-collection-play me-2"></i> Curate</h2>
-                <p>Create and manage playlists for every mood, occasion, or activity.</p>
-            </div>
-        </div>
+    <div class="about-feature-card">
+        <div class="about-feature-icon"><i class="bi bi-collection-play"></i></div>
+        <div class="about-feature-title">Curate</div>
+        <div class="about-feature-desc">Create and manage playlists for every mood, occasion, or activity.</div>
     </div>
-    <div class="col-md-4">
-        <div class="card bg-black text-light border-0 h-100">
-            <div class="card-body">
-                <h2><i class="bi bi-people me-2"></i> Connect</h2>
-                <p>Follow artists and friends to stay updated with their latest releases and favorites.</p>
-            </div>
-        </div>
+    <div class="about-feature-card">
+        <div class="about-feature-icon"><i class="bi bi-people"></i></div>
+        <div class="about-feature-title">Connect</div>
+        <div class="about-feature-desc">Follow artists and friends to stay updated with their latest releases and favorites.</div>
     </div>
 </div>
 
-<div class="alert alert-info bg-dark text-info border border-info">
+<div class="about-info">
     <i class="bi bi-info-circle me-2"></i> This is the About page that provides information about the Music Library System project and its features.
 </div>

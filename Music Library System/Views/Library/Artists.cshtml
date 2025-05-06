@@ -17,9 +17,12 @@
                         <h5 class="card-title">@artist.Name</h5>
                         <p class="card-text">
                             <small>
-                                <span class="badge bg-secondary me-2">@artist.NumAlbums Albums</span>
-                                <span class="badge bg-secondary">@artist.NumSongs Songs</span>
+                                <span class="badge bg-secondary me-2">@artist.Albums?.Count Albums</span>
+                                <span class="badge bg-secondary">@artist.Songs?.Count Songs</span>
                             </small>
+                        </p>
+                        <p class="card-text text-secondary">
+                            <small>@artist.Genre • @artist.Country</small>
                         </p>
                     </div>
                     <div class="card-footer">

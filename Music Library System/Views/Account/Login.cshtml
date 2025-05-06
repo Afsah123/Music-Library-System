@@ -1,0 +1,75 @@
+@{
+    ViewData["Title"] = "Sign In";
+    var bgUrl = "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1500&q=80";
+}
+
+@if (TempData["AuthMessage"] != null)
+{
+    <div class="alert alert-warning text-center" role="alert">
+        @TempData["AuthMessage"]
+    </div>
+}
+
+<style>
+.bg-login-img {
+    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('@bgUrl') center center/cover no-repeat;
+    min-height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0; left: 0;
+    z-index: -1;
+}
+.login-label {
+    color: #FF6B00;
+    font-weight: 500;
+}
+.form-control:focus {
+    border-color: #FF6B00;
+    box-shadow: 0 0 0 2px rgba(255,107,0,0.15);
+}
+.btn-signin {
+    background: #FF6B00;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-weight: bold;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: background 0.3s, color 0.3s;
+}
+.btn-signin:hover, .btn-signin:focus {
+    background: #ff8c42;
+    color: #fff;
+}
+</style>
+
+<div class="bg-login-img"></div>
+
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 100vh;">
+    <div class="card bg-dark text-light shadow-lg p-4" style="width: 100%; max-width: 400px;">
+        <h2 class="mb-4 text-center" style="color:#FF6B00;">Sign in to Music System</h2>
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-danger text-center">@ViewBag.Error</div>
+        }
+        <form method="post" action="/Account/Login">
+            <div class="mb-3">
+                <label for="email" class="form-label login-label">Email address</label>
+                <input type="email" class="form-control" id="email" name="Email" required autofocus>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label login-label">Password</label>
+                <input type="password" class="form-control" id="password" name="Password" required>
+            </div>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="rememberMe" name="RememberMe">
+                <label class="form-check-label" for="rememberMe">Remember me</label>
+            </div>
+            <button type="submit" class="btn btn-signin">Sign In</button>
+            <div class="text-center">
+                <span>Don't have an account?</span>
+                <a href="/Account/Register" class="text-info">Sign up</a>
+            </div>
+        </form>
+    </div>
+</div> 

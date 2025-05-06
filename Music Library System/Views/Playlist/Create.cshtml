@@ -1,0 +1,84 @@
+@{
+    ViewData["Title"] = "Create Playlist";
+}
+
+<style>
+    body {
+        background: #000;
+    }
+    .create-playlist-container {
+        max-width: 500px;
+        margin: 40px auto;
+        background: rgba(30,30,30,0.95);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        padding: 2.5rem 2rem 2rem 2rem;
+        color: #fff;
+    }
+    .create-playlist-title {
+        color: #FF6B00;
+        font-size: 2rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        text-align: center;
+    }
+    .form-label {
+        color: #FF6B00;
+        font-weight: 500;
+    }
+    .form-control, .form-select {
+        background: #181818;
+        color: #fff;
+        border: 1.5px solid #FF6B00;
+        border-radius: 10px;
+        margin-bottom: 1.2rem;
+    }
+    .form-control:focus, .form-select:focus {
+        border-color: #FF6B00;
+        box-shadow: 0 0 0 2px rgba(255,107,0,0.15);
+        background: #181818;
+        color: #fff;
+    }
+    .form-check-label {
+        color: #fff;
+        margin-left: 0.5rem;
+    }
+    .btn-create {
+        background: #FF6B00;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        padding: 0.7rem 2rem;
+        font-size: 1.1rem;
+        font-weight: bold;
+        width: 100%;
+        transition: background 0.3s, color 0.3s;
+    }
+    .btn-create:hover {
+        background: #fff;
+        color: #FF6B00;
+    }
+</style>
+
+<div class="create-playlist-container">
+    <div class="create-playlist-title">Create New Playlist</div>
+    <form method="post" action="/Playlist/Create">
+        <div class="mb-3">
+            <label for="Name" class="form-label">Playlist Name</label>
+            <input type="text" class="form-control" id="Name" name="Name" required maxlength="100">
+        </div>
+        <div class="mb-3">
+            <label for="Description" class="form-label">Description</label>
+            <textarea class="form-control" id="Description" name="Description" rows="3" maxlength="300"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="CoverImageUrl" class="form-label">Cover Image URL</label>
+            <input type="url" class="form-control" id="CoverImageUrl" name="CoverImageUrl" placeholder="https://...">
+        </div>
+        <div class="mb-3 form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="IsPublic" name="IsPublic" checked>
+            <label class="form-check-label" for="IsPublic">Public Playlist</label>
+        </div>
+        <button type="submit" class="btn btn-create">Create Playlist</button>
+    </form>
+</div> 

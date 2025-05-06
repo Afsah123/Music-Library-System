@@ -4,41 +4,198 @@
     ViewData["Title"] = "Songs";
 }
 
-<div class="container mt-4">
-    <h1 class="mb-4">Songs</h1>
+<style>
+    .songs-header {
+        background: linear-gradient(45deg, #000000, #1a1a1a);
+        padding: 3rem 0;
+        margin-bottom: 2rem;
+    }
+
+    .songs-title {
+        color: #FF6B00;
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 1rem;
+    }
+
+    .songs-subtitle {
+        color: white;
+        font-size: 1.2rem;
+        opacity: 0.8;
+    }
+
+    .filter-section {
+        background: rgba(255, 107, 0, 0.1);
+        border-radius: 10px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .filter-title {
+        color: #FF6B00;
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    .filter-button {
+        background: transparent;
+        border: 1px solid #FF6B00;
+        color: #FF6B00;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin: 0.25rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-button:hover, .filter-button.active {
+        background: #FF6B00;
+        color: white;
+    }
+
+    .song-table {
+        background: rgba(30,30,30,0.95);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px 0 rgba(255,107,0,0.10);
+        color: #fff;
+        margin-bottom: 2rem;
+        overflow: hidden;
+        width: 100%;
+        min-width: 1000px;
+    }
+
+    .song-table th {
+        background: #181818;
+        color: #FF6B00;
+        font-weight: bold;
+        border: none;
+        padding: 1rem;
+        white-space: nowrap;
+    }
+
+    .song-table td {
+        background: transparent;
+        color: #fff;
+        vertical-align: middle;
+        border-top: 1px solid #222;
+        padding: 1rem;
+    }
+
+    .song-table tr:hover td {
+        background: rgba(255,107,0,0.08);
+    }
+
+    .song-cover-img {
+        width: 44px;
+        height: 44px;
+        object-fit: cover;
+        border-radius: 8px;
+        border: 2px solid #FF6B00;
+        background: #181818;
+    }
+
+    .btn-orange {
+        background: #FF6B00;
+        color: #fff;
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .btn-orange:hover {
+        background: #ff8c42;
+        color: #fff;
+    }
+
+    .btn-outline-orange {
+        border: 1.5px solid #FF6B00;
+        color: #FF6B00;
+        background: transparent;
+        border-radius: 20px;
+        font-weight: bold;
+        transition: background 0.3s, color 0.3s;
+    }
+
+    .btn-outline-orange:hover {
+        background: #FF6B00;
+        color: #fff;
+    }
+
+    .dropdown-menu-dark {
+        background: #181818;
+        border: 1px solid #FF6B00;
+    }
+
+    .dropdown-menu-dark .dropdown-item {
+        color: #fff;
+    }
+
+    .dropdown-menu-dark .dropdown-item:hover {
+        background: rgba(255,107,0,0.1);
+        color: #FF6B00;
+    }
+
+    .dropdown-menu-dark .dropdown-item.active {
+        background: #FF6B00;
+        color: #fff;
+    }
+</style>
+
+<div class="songs-header">
+    <div class="container">
+        <h1 class="songs-title">Your Songs</h1>
+        <p class="songs-subtitle">Browse and filter your music collection</p>
+    </div>
+</div>
+
+<div class="container">
+    <div class="filter-section">
+        <h3 class="filter-title">Filter by Genre</h3>
+        <div class="filter-buttons">
+            <button type="button" class="filter-button @(ViewBag.SelectedGenre == null ? "active" : "")" data-genre="">All</button>
+            @foreach (var genre in ViewBag.Genres)
+            {
+                <button type="button" class="filter-button @(ViewBag.SelectedGenre == genre ? "active" : "")" data-genre="@genre">@genre</button>
+            }
+        </div>
+    </div>
+
+    <input type="text" class="search-box" id="songSearchBox" placeholder="Search your library..." value="@ViewBag.Search" />
 
     <div class="table-responsive">
-        <table class="table table-dark table-hover">
+        <table class="song-table">
             <thead>
                 <tr>
-                    <th scope="col"></th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Artist</th>
-                    <th scope="col">Album</th>
-                    <th scope="col">Duration</th>
-                    <th scope="col"></th>
+                    <th></th>
+                    <th>Title</th>
+                    <th>Artist</th>
+                    <th>Album</th>
+                    <th>Duration</th>
+                    <th>Genre</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="songsTableBody">
                 @foreach (var song in Model)
                 {
                     <tr>
                         <td>
-                            <img src="@song.CoverImageUrl" alt="@song.Title" class="img-fluid" style="width: 40px; height: 40px;">
+                            <img src="@song.Album?.CoverImageUrl" class="song-cover-img" alt="@song.Title">
                         </td>
                         <td>@song.Title</td>
-                        <td>@song.ArtistName</td>
-                        <td>@song.AlbumTitle</td>
+                        <td>@song.Artist?.Name</td>
+                        <td>@song.Album?.Title</td>
                         <td>@song.Duration</td>
+                        <td>@song.Genre</td>
                         <td>
                             <div class="dropdown">
-                                <button class="btn btn-sm btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton@(song.Id)" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-three-dots"></i>
+                                <button class="btn btn-outline-orange btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                                    Actions
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuButton@(song.Id)">
-                                    <li><a class="dropdown-item" href="#">Add to Playlist</a></li>
-                                    <li><a class="dropdown-item" href="#">Like</a></li>
-                                    <li><a class="dropdown-item" href="#">View Artist</a></li>
+                                <ul class="dropdown-menu dropdown-menu-dark">
+                                    <li><a class="dropdown-item play-song-btn" href="#" data-title="@song.Title" data-src="@song.AudioUrl"><i class="bi bi-play-fill"></i> Play</a></li>
+                                    <li><a class="dropdown-item add-to-playlist-btn" href="#" data-title="@song.Title"><i class="bi bi-plus"></i> Add to Playlist</a></li>
+                                    <li><a class="dropdown-item add-to-fav-btn" href="#"><i class="bi bi-heart"></i> Add to Favorites</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -48,3 +205,63 @@
         </table>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            function filterSongs(genre, search) {
+                $.get('@Url.Action("FilterSongsByGenre", "Library")', { genre: genre, search: search }, function (data) {
+                    $('#songsTableBody').html(data);
+                });
+            }
+
+            $('.filter-button').click(function(e) {
+                e.preventDefault();
+                var genre = $(this).data('genre');
+                var search = $('#songSearchBox').val();
+                $('.filter-button').removeClass('active');
+                $(this).addClass('active');
+                filterSongs(genre, search);
+            });
+
+            $('#songSearchBox').on('input', function() {
+                var search = $(this).val();
+                var genre = $('.filter-button.active').data('genre');
+                filterSongs(genre, search);
+            });
+
+            $('#songSearchBox').on('keypress', function(e) {
+                if (e.which == 13) { // Enter key
+                    e.preventDefault();
+                    var search = $(this).val();
+                    var genre = $('.filter-button.active').data('genre');
+                    filterSongs(genre, search);
+                }
+            });
+
+            // Handle play button clicks
+            $('.play-song-btn').click(function(e) {
+                e.preventDefault();
+                const title = $(this).data('title');
+                const src = $(this).data('src');
+                // Add your play functionality here
+                console.log(`Playing: ${title} from ${src}`);
+            });
+
+            // Handle add to playlist button clicks
+            $('.add-to-playlist-btn').click(function(e) {
+                e.preventDefault();
+                const title = $(this).data('title');
+                // Add your add to playlist functionality here
+                console.log(`Adding to playlist: ${title}`);
+            });
+
+            // Handle add to favorites button clicks
+            $('.add-to-fav-btn').click(function(e) {
+                e.preventDefault();
+                // Add your add to favorites functionality here
+                console.log('Adding to favorites');
+            });
+        });
+    </script>
+}
