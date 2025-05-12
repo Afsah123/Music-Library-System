@@ -14,6 +14,7 @@ namespace MusicLibraryBackend.Data
         public DbSet<Song> Songs { get; set; }
         public DbSet<Artist> Artists { get; set; }
         public DbSet<Album> Albums { get; set; }
+        public DbSet<PersonalInformation> PersonalInformations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,12 @@ namespace MusicLibraryBackend.Data
                 .WithMany(a => a.Songs)
                 .HasForeignKey(s => s.AlbumId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<PersonalInformation>()
+                .HasOne(p => p.User)
+                .WithOne()
+                .HasForeignKey<PersonalInformation>(p => p.UserModelId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 } 
