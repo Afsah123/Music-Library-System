@@ -160,8 +160,6 @@
         </div>
     </div>
 
-    <input type="text" class="search-box" id="songSearchBox" placeholder="Search your library..." value="@ViewBag.Search" />
-
     <div class="table-responsive">
         <table class="song-table">
             <thead>
@@ -209,34 +207,14 @@
 @section Scripts {
     <script>
         $(document).ready(function() {
-            function filterSongs(genre, search) {
-                $.get('@Url.Action("FilterSongsByGenre", "Library")', { genre: genre, search: search }, function (data) {
-                    $('#songsTableBody').html(data);
-                });
-            }
-
             $('.filter-button').click(function(e) {
                 e.preventDefault();
                 var genre = $(this).data('genre');
-                var search = $('#songSearchBox').val();
                 $('.filter-button').removeClass('active');
                 $(this).addClass('active');
-                filterSongs(genre, search);
-            });
-
-            $('#songSearchBox').on('input', function() {
-                var search = $(this).val();
-                var genre = $('.filter-button.active').data('genre');
-                filterSongs(genre, search);
-            });
-
-            $('#songSearchBox').on('keypress', function(e) {
-                if (e.which == 13) { // Enter key
-                    e.preventDefault();
-                    var search = $(this).val();
-                    var genre = $('.filter-button.active').data('genre');
-                    filterSongs(genre, search);
-                }
+                $.get('@Url.Action("FilterSongsByGenre", "Library")', { genre: genre }, function (data) {
+                    $('#songsTableBody').html(data);
+                });
             });
 
             // Handle play button clicks

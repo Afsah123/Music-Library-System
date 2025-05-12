@@ -8,9 +8,17 @@ namespace Music_Library_System.Controllers
     {
         public IActionResult Index()
         {
+            return View();
+        }
+
+        // GET: Profile/Edit
+        public IActionResult Edit()
+        {
+            // In a real application, you would get the current user's ID from the session/authentication
+            var userId = 1; // This is just for demo purposes
             var userProfile = new UserProfile
             {
-                Id = 1,
+                Id = userId,
                 Username = "Afsah Ur Rehman Zaidi",
                 Email = "afsah@example.com",
                 ProfilePictureUrl = "https://picsum.photos/id/25/300/300",
@@ -22,6 +30,20 @@ namespace Music_Library_System.Controllers
                 FavoriteArtists = new List<Artist>()
             };
 
+            return View(userProfile);
+        }
+
+        // POST: Profile/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(UserProfile userProfile)
+        {
+            if (ModelState.IsValid)
+            {
+                // In a real application, you would update the user in the database
+                // For now, we'll just redirect back to the profile page
+                return RedirectToAction(nameof(Index));
+            }
             return View(userProfile);
         }
     }

@@ -1,9 +1,26 @@
-# Visual Studio Specific
-.vs/
-*.user
+# Visual Studio and JetBrains Rider
+**/.vs/
+**/.idea/
 *.suo
-*.vssscc
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+*_Resharper.*
+
+# Build and Binary Files
+**/bin/
+**/obj/
+**/Debug/
+**/Release/
+*.dll
+*.exe
+*.pdb
 *.cache
+*.ilk
+*.idb
+*.lib
+*.exp
 *.ncb
 *.aps
 *.sdf
@@ -11,21 +28,8 @@
 *.opensdf
 *.VC.opendb
 
-# Build and Binary Files
-bin/
-obj/
-Debug/
-Release/
-*.dll
-*.exe
-*.pdb
-*.ilk
-*.idb
-*.lib
-*.exp
-
-# Package Management
-packages/
+# NuGet and Package Management
+**/packages/
 *.nupkg
 project.lock.json
 project.assets.json
@@ -40,27 +44,21 @@ project.assets.json
 *.mode2v3
 *.rsuser
 
-# Resharper and Rider
-*_Resharper.*
-*.DotSettings.user
-.idea/
-
-# ASP.NET Specific
-App_Data/
-AppPackages/
-TestResults/
-node_modules/
-bower_components/
+# ASP.NET and Web
+**/App_Data/
+**/AppPackages/
+**/TestResults/
+**/node_modules/
+**/bower_components/
 
 # Publishing Output
 *.Publish.xml
-publish/
-wwwroot/
+**/publish/
 
 # Entity Framework
 *.edmx.diagram
 *.edmx.sql
-Migrations/
+**/Migrations/
 
 # Configuration and Secrets
 secrets.json
@@ -71,3 +69,10 @@ appsettings.Local.json
 *.vspscc
 *.vssscc
 *.deployment
+
+# Ignore backend wwwroot, but NOT frontend static assets
+MusicLibraryBackend/**/wwwroot/
+!Music Library System/wwwroot/
+
+# Ignore launchSettings.json (user-specific)
+**/Properties/launchSettings.json

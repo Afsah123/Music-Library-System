@@ -4,6 +4,7 @@ namespace Music_Library_System.Models
 {
     public class UserSession
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Gender { get; set; }
@@ -16,6 +17,7 @@ namespace Music_Library_System.Models
         {
             return new UserSession
             {
+                Id = user.Id,
                 Name = user.Name,
                 Email = user.Email,
                 Gender = user.Gender,

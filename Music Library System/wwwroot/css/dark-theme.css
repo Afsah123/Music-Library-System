@@ -1,0 +1,135 @@
+﻿:root {
+    --bg-primary: #121212;
+    --bg-secondary: #181818;
+    --bg-elevated: #282828;
+    --text-primary: #ffffff;
+    --text-secondary: #b3b3b3;
+    --accent-color: #ff4081;
+    --border-color: #333333;
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.navbar {
+    background-color: #000000 !important;
+}
+
+.card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    }
+
+.table-dark {
+    background-color: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+    .table-dark thead th {
+        background-color: var(--bg-elevated);
+        border-color: var(--border-color);
+    }
+
+.footer {
+    background-color: #000000 !important;
+    color: var(--text-secondary);
+}
+
+    .footer a {
+        color: var(--text-secondary);
+        text-decoration: none;
+    }
+
+        .footer a:hover {
+            color: var(--text-primary);
+        }
+
+.btn-primary {
+    background-color: var(--accent-color);
+    border-color: var(--accent-color);
+}
+
+    .btn-primary:hover {
+        background-color: #e91e63;
+        border-color: #e91e63;
+    }
+
+.list-group-item.bg-dark {
+    background-color: var(--bg-secondary) !important;
+    border-color: var(--border-color);
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bg-elevated);
+    border-radius: 4px;
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+
+/* Override Bootstrap form controls */
+.form-control {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+    .form-control:focus {
+        background-color: var(--bg-secondary);
+        color: var(--text-primary);
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 0.25rem rgba(255, 64, 129, 0.25);
+    }
+
+.dropdown-menu {
+    background-color: var(--bg-elevated);
+    border-color: var(--border-color);
+}
+
+.dropdown-item {
+    color: var(--text-primary);
+}
+
+    .dropdown-item:hover {
+        background-color: var(--bg-primary);
+        color: var(--text-primary);
+    }
+
+/* Style for playing animation */
+@keyframes playing {
+    0% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.1);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+.playing-indicator {
+    color: var(--accent-color);
+    animation: playing 1s infinite;
+}

@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Json;
+using System.Threading.Tasks;
 using Music_Library_System.Models;
 using System.Text.Json;
 
@@ -11,26 +12,12 @@ namespace Music_Library_System.Controllers
     public class AccountController : Controller
     {
         private const string SessionKey = "UserSession";
-        // In-memory user store
-        private static List<UserModel> Users = new List<UserModel>();
-        private static bool DummyUserAdded = false;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly string _apiBaseUrl = "http://localhost:5212";
 
-        private void EnsureDummyUser()
+        public AccountController(IHttpClientFactory httpClientFactory)
         {
-            if (!DummyUserAdded)
-            {
-                Users.Add(new UserModel
-                {
-                    Name = "Test User",
-                    Gender = "Male",
-                    DateOfBirth = new DateTime(2000, 1, 1),
-                    Email = "test@example.com",
-                    Password = "password123",
-                    Number = "1234567890",
-                    ProfilePicturePath = null
-                });
-                DummyUserAdded = true;
-            }
+            _httpClientFactory = httpClientFactory;
         }
 
         private UserSession GetCurrentSession()
@@ -48,63 +35,80 @@ namespace Music_Library_System.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            EnsureDummyUser();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Register(string Name, string Gender, DateTime DateOfBirth, string Email, string Password, string Number, IFormFile ProfilePicture)
+        public async Task<IActionResult> Register(string Name, string Gender, DateTime DateOfBirth, string Email, string Password, string Number, IFormFile ProfilePicture)
         {
-            EnsureDummyUser();
-            if (Users.Any(u => u.Email.Equals(Email, StringComparison.OrdinalIgnoreCase)))
-            {
-                ViewBag.Error = "A user with this email already exists.";
-                return View();
-            }
             string profilePicPath = null;
             if (ProfilePicture != null && ProfilePicture.Length > 0)
             {
                 // For demo, just use file name (not saving to disk)
                 profilePicPath = ProfilePicture.FileName;
             }
-            var newUser = new UserModel
+            var signupData = new
             {
-                Name = Name,
-                Gender = Gender,
-                DateOfBirth = DateOfBirth,
-                Email = Email,
-                Password = Password,
-                Number = Number,
-                ProfilePicturePath = profilePicPath
+                name = Name,
+                gender = Gender,
+                dateOfBirth = DateOfBirth,
+                email = Email,
+                password = Password,
+                number = Number,
+                profilePicturePath = profilePicPath
             };
-            Users.Add(newUser);
-            ViewBag.Message = "Registration successful! You can now sign in.";
-            return View();
+            // Debug: print outgoing JSON
+            Console.WriteLine("Signup JSON: " + System.Text.Json.JsonSerializer.Serialize(signupData));
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsJsonAsync(_apiBaseUrl + "/api/auth/signup", signupData);
+            var result = await response.Content.ReadAsStringAsync();
+            Console.WriteLine("API Response: " + result);
+            var json = System.Text.Json.JsonDocument.Parse(result).RootElement;
+            if (response.IsSuccessStatusCode && json.GetProperty("success").GetBoolean())
+            {
+                // Store user in session
+                var user = json.GetProperty("user").ToString();
+                var userSession = System.Text.Json.JsonSerializer.Deserialize<UserSession>(user);
+                SetCurrentSession(userSession);
+                ViewBag.Message = "Registration successful! You can now sign in.";
+                return RedirectToAction("Login");
+            }
+            else
+            {
+                ViewBag.Error = json.TryGetProperty("message", out var msg) ? msg.GetString() : "Signup failed.";
+                return View();
+            }
         }
 
         [HttpGet]
         public IActionResult Login()
         {
-            EnsureDummyUser();
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(string Email, string Password, bool RememberMe)
+        public async Task<IActionResult> Login(string Email, string Password, bool RememberMe)
         {
-            EnsureDummyUser();
-            var user = Users.FirstOrDefault(u => u.Email.Equals(Email, StringComparison.OrdinalIgnoreCase) && u.Password == Password);
-            if (user == null)
+            var loginData = new { email = Email, password = Password };
+            var client = _httpClientFactory.CreateClient();
+            var response = await client.PostAsJsonAsync(_apiBaseUrl + "/api/auth/login", loginData);
+            var result = await response.Content.ReadAsStringAsync();
+            var json = System.Text.Json.JsonDocument.Parse(result).RootElement;
+            if (response.IsSuccessStatusCode && json.GetProperty("success").GetBoolean())
             {
-                ViewBag.Error = "Invalid account details.";
+                // Store user in session
+                var user = json.GetProperty("user").ToString();
+                var userSession = System.Text.Json.JsonSerializer.Deserialize<UserSession>(user);
+                userSession.IsLoggedIn = true; // Ensure IsLoggedIn is set
+                SetCurrentSession(userSession);
+                Console.WriteLine("Session set after login: " + HttpContext.Session.GetString(SessionKey));
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.Error = json.TryGetProperty("message", out var msg) ? msg.GetString() : "Login failed.";
                 return View();
             }
-            
-            // Create and store session
-            var session = UserSession.FromUserModel(user);
-            SetCurrentSession(session);
-            
-            return RedirectToAction("Index", "Home");
         }
 
         [HttpGet]
@@ -115,7 +119,39 @@ namespace Music_Library_System.Controllers
         }
 
         [HttpGet]
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
+        {
+            var sessionJson = HttpContext.Session.GetString(SessionKey);
+            Console.WriteLine("Session on profile: " + sessionJson);
+            var session = GetCurrentSession();
+            if (session == null || !session.IsLoggedIn)
+            {
+                return RedirectToAction("Login");
+            }
+
+            // Fetch personal information from backend API
+            var client = _httpClientFactory.CreateClient();
+            PersonalInformation personalInfo = null;
+            try
+            {
+                var response = await client.GetAsync($"{_apiBaseUrl}/api/PersonalInformation/{session.Id}");
+                if (response.IsSuccessStatusCode)
+                {
+                    var json = await response.Content.ReadAsStringAsync();
+                    personalInfo = System.Text.Json.JsonSerializer.Deserialize<PersonalInformation>(json, new System.Text.Json.JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error fetching personal info: " + ex.Message);
+            }
+            ViewBag.PersonalInfo = personalInfo;
+            return View(session);
+        }
+
+        // GET: Account/Edit
+        [HttpGet]
+        public IActionResult Edit()
         {
             var session = GetCurrentSession();
             if (session == null || !session.IsLoggedIn)
@@ -123,6 +159,20 @@ namespace Music_Library_System.Controllers
                 return RedirectToAction("Login");
             }
             return View(session);
+        }
+
+        // POST: Account/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(UserSession updatedSession)
+        {
+            if (ModelState.IsValid)
+            {
+                updatedSession.IsLoggedIn = true;
+                SetCurrentSession(updatedSession);
+                return RedirectToAction("Profile");
+            }
+            return View(updatedSession);
         }
     }
 } 

@@ -12,6 +12,7 @@
     };
     var random = new Random();
     var randomPic = randomPics[random.Next(randomPics.Length)];
+    var personalInfo = ViewBag.PersonalInfo as Music_Library_System.Models.PersonalInformation;
 }
 
 <style>
@@ -75,13 +76,13 @@
     }
 
     .btn-logout {
-        background: #dc3545;
+        background: #FF6B00;
         border: none;
         color: white;
     }
 
     .btn-logout:hover {
-        background: #e74c3c;
+            background: #FF8533;
         color: white;
     }
 
@@ -144,10 +145,11 @@
         <div class="col-md-6">
             <div class="profile-info">
                 <h4 class="text-light mb-4">Personal Information</h4>
-                <p><strong>Email:</strong> @Model.Email</p>
-                <p><strong>Gender:</strong> @Model.Gender</p>
-                <p><strong>Date of Birth:</strong> @Model.DateOfBirth.ToShortDateString()</p>
-                <p><strong>Phone:</strong> @Model.Number</p>
+                <p><strong>Full Name:</strong> @personalInfo?.FullName ?? "Not set"</p>
+                <p><strong>Gender:</strong> @personalInfo?.Gender ?? "Not set"</p>
+                <p><strong>Date of Birth:</strong> @(personalInfo?.DateOfBirth != null && personalInfo.DateOfBirth != DateTime.MinValue ? personalInfo.DateOfBirth.ToString("yyyy-MM-dd") : "Not set")</p>
+                <p><strong>Phone:</strong> @personalInfo?.PhoneNumber ?? "Not set"</p>
+                <p><strong>Address:</strong> @personalInfo?.Address ?? "Not set"</p>
             </div>
         </div>
         <div class="col-md-6">
@@ -157,6 +159,7 @@
                     <button class="btn btn-edit">
                         <i class="bi bi-pencil-square me-2"></i>Edit Profile
                     </button>
+                    @* <a asp-action="edit" asp-controller="account">Edit Profile</a>*@
                     <button class="btn btn-outline-light">
                         <i class="bi bi-key me-2"></i>Change Password
                     </button>
@@ -173,4 +176,8 @@
             <i class="bi bi-box-arrow-right me-2"></i>Logout
         </a>
     </div>
-</div> 
+</div>
+
+@section Scripts {
+    <!-- No JS needed for personal info -->
+} 
